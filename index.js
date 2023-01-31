@@ -1,4 +1,4 @@
-const { MongoClient, ServerApiVersion } = require('mongodb');
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 const express = require('express');
 const cors = require('cors');
 require('dotenv').config() ; 
@@ -28,6 +28,7 @@ const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology:
 async function run () {
     const AdminCollection = client.db('Gropu-Asia').collection('Admin');
     const EmployesCollection = client.db('Gropu-Asia').collection('CreateEmploye');
+    const ApplicationCollection = client.db('Gropu-Asia').collection('Application');
     try{
         app.get('/admin',async (req, res)=> {
             const query = {} ;
@@ -44,6 +45,30 @@ async function run () {
             const result = await EmployesCollection.insertOne(query)
             res.send(result) 
         })
+        app.delete('/deleteEmploye/:id', async(req, res)=>{
+            const id = req.params.id ;
+            const query = {_id : ObjectId(id)} ;
+            const result = await EmployesCollection.deleteOne(query) ;
+            res.send(result) ; 
+        })
+        app.delete('/deleteApplication/:id', async (req, res)=>{
+            const id = req.params.id ; 
+            const query = {_id : ObjectId(id)} ; 
+            const filter = await ApplicationCollection.deleteOne(query) ; 
+            res.send(filter) ; 
+        })
+        app.post('/application', async (req, res)=>{
+            const query = req.body; 
+            const result = await ApplicationCollection.insertOne(query) ;
+            res.send(result)
+        })
+        app.get('/application', async (req, res)=>{
+            const query = {} ; 
+            const result = await ApplicationCollection.find(query).toArray() ; 
+            res.send(result) ; 
+        })
+      
+
 
     }
     finally{
