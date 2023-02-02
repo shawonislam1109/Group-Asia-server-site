@@ -87,10 +87,10 @@ async function run () {
             const result = await ApplicationCollection.findOne(filter) ;
             res.send(result)
         })
-        app.get('/application', async (req, res)=> {
+        app.get('/applicationmyData', async (req, res)=> {
             const email = req.query.email ; 
-            const query = {email : email }
-            const result = await ApplicationCollection.findOne(query)
+            const query = {email}
+            const result = await ApplicationCollection.find(query).toArray() ; 
             res.send(result) ; 
         })
       
