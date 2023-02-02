@@ -40,7 +40,7 @@ async function run () {
             const  result = await EmployesCollection.find(query).toArray();
             res.send(result) ; 
         })
-        app.post('/createEmployes', async (req, res)=>{
+        app.post('/createEmploye', async (req, res)=>{
             const query = req.body ; 
             const result = await EmployesCollection.insertOne(query)
             res.send(result) 
@@ -62,12 +62,39 @@ async function run () {
             const result = await ApplicationCollection.insertOne(query) ;
             res.send(result)
         })
+        app.put('/updateapplication/:id', async(req, res)=>{
+            const id = req.params.id;
+            const filter = { _id: ObjectId(id) }
+            const updateDAta = req.body;
+            const options = { upsert: true }
+            const updateDoc = {
+                $set: {
+                    date : updateDAta.date ,
+                    application : updateDAta.application,
+                }
+            }
+            const result = await ApplicationCollection.updateOne(filter, updateDoc, options)
+            res.send(result) ; 
+        })
         app.get('/application', async (req, res)=>{
             const query = {} ; 
             const result = await ApplicationCollection.find(query).toArray() ; 
             res.send(result) ; 
         })
+        app.get('/application/:id', async(req, res)=>{
+            const id = req.params.id ; 
+            const filter = {_id: ObjectId(id)}
+            const result = await ApplicationCollection.findOne(filter) ;
+            res.send(result)
+        })
+        app.get('/application', async (req, res)=> {
+            const email = req.query.email ; 
+            const query = {email : email }
+            const result = await ApplicationCollection.findOne(query)
+            res.send(result) ; 
+        })
       
+        
 
 
     }
