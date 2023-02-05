@@ -76,6 +76,18 @@ async function run () {
             const result = await ApplicationCollection.updateOne(filter, updateDoc, options)
             res.send(result) ; 
         })
+        app.put('/approveApplication/:id', async(req, res)=> {
+            const id = req.params.id ; 
+            const filter = {_id : ObjectId(id)}
+            const options = {upsert : true} ; 
+            const updateDoc = {
+                $set : {
+                    approve : 'Done'
+                }
+            }
+            const result = await ApplicationCollection.updateOne(filter, updateDoc, options) 
+            res.send(result) ; 
+        })
         app.get('/application', async (req, res)=>{
             const query = {} ; 
             const result = await ApplicationCollection.find(query).toArray() ; 
